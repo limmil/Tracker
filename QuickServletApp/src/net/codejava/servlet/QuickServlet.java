@@ -25,8 +25,11 @@ public class QuickServlet extends HttpServlet {
      * by the client
      */
 
+	String preCourse = "";
+
     public void init(ServletConfig config) {
         System.out.println("Servlet is being initialized");
+        
         
     }
  
@@ -118,29 +121,71 @@ public class QuickServlet extends HttpServlet {
     			//arr[0] has value for the timer
     			//arr size is 2
     			String[]arr = SheetsQuickstart.getTkey("CSC20",1996570317);
-	    		request.setAttribute("randomKey", arr[1] );
+    			request.setAttribute("randomKey", arr[1] );
+    			request.setAttribute("timeLimit", "Key is valid till "+arr[0]);
 	    	    request.getRequestDispatcher("RandKey.jsp").forward(request, response);
+	    	    preCourse = "CSC20";
     		}
     		else if(course.equals("CSC130")) {
-    			String[]arr = SheetsQuickstart.getTkey("CSC30",1472870202);
+    			String[]arr = SheetsQuickstart.getTkey("CSC130",1472870202);
     			request.setAttribute("randomKey", arr[1] );
+    			request.setAttribute("timeLimit", "Key is valid till "+arr[0]);
 	    	    request.getRequestDispatcher("RandKey.jsp").forward(request, response);
+	    	    preCourse = "CSC130";
     		}
     		else if(course.equals("CSC131")) {
     			String[]arr = SheetsQuickstart.getTkey("CSC131",0);
     			request.setAttribute("randomKey", arr[1] );
+    			request.setAttribute("timeLimit", "Key is valid till "+arr[0]);
 	    	    request.getRequestDispatcher("RandKey.jsp").forward(request, response);
+	    	    preCourse = "CSC131";
     		}
     		else if(course.equals("CSC133")) {
     			String[]arr = SheetsQuickstart.getTkey("CSC133",756897706);
     			request.setAttribute("randomKey", arr[1] );
+    			request.setAttribute("timeLimit", "Key is valid till "+arr[0]);
 	    	    request.getRequestDispatcher("RandKey.jsp").forward(request, response);
+	    	    preCourse = "CSC133";
     		}
     		else if(course.equals("CSC135")) {
     			String[]arr = SheetsQuickstart.getTkey("CSC135",543682871);
     			request.setAttribute("randomKey", arr[1] );
+    			request.setAttribute("timeLimit", "Key is valid till "+arr[0]);
 	    	    request.getRequestDispatcher("RandKey.jsp").forward(request, response);
+	    	    preCourse = "CSC135";
     		} 
+    	}else if(formName.equals("KeyReset")) {
+    		if(preCourse.equals("CSC20")) {
+    			String[]arr = SheetsQuickstart.resetTkey("CSC20",1996570317);
+    			request.setAttribute("randomKey", arr[1] );
+    			request.setAttribute("timeLimit", "Key is valid till "+arr[0]);
+	    	    request.getRequestDispatcher("RandKey.jsp").forward(request, response);
+	    	    preCourse = "CSC20";
+    		}else if(preCourse.equals("CSC130")) {
+    			String[]arr = SheetsQuickstart.resetTkey("CSC130",1472870202);
+    			request.setAttribute("randomKey", arr[1] );
+    			request.setAttribute("timeLimit", "Key is valid till "+arr[0]);
+	    	    request.getRequestDispatcher("RandKey.jsp").forward(request, response);
+	    	    preCourse = "CSC130";
+    		}else if(preCourse.equals("CSC131")) {
+    			String[]arr = SheetsQuickstart.resetTkey("CSC131",0);
+    			request.setAttribute("randomKey", arr[1] );
+    			request.setAttribute("timeLimit", "Key is valid till "+arr[0]);
+	    	    request.getRequestDispatcher("RandKey.jsp").forward(request, response);
+	    	    preCourse = "CSC131";
+    		}else if(preCourse.equals("CSC133")) {
+    			String[]arr = SheetsQuickstart.resetTkey("CSC133",756897706);
+    			request.setAttribute("randomKey", arr[1] );
+    			request.setAttribute("timeLimit", "Key is valid till "+arr[0]);
+	    	    request.getRequestDispatcher("RandKey.jsp").forward(request, response);
+	    	    preCourse = "CSC133";
+    		}else if(preCourse.equals("CSC135")) {
+    			String[]arr = SheetsQuickstart.resetTkey("CSC135",543682871);
+    			request.setAttribute("randomKey", arr[1] );
+    			request.setAttribute("timeLimit", "Key is valid till "+arr[0]);
+	    	    request.getRequestDispatcher("RandKey.jsp").forward(request, response);
+	    	    preCourse = "CSC135";
+    		}
     	}else {
     		writer.println("Key has not been created");
         	writer.flush();
