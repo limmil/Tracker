@@ -72,212 +72,20 @@ public class SheetsQuickstart {
                 .build();
     } 
 
-    //Date
+    //returns today's date
     public static String getDate() throws IOException{
     	SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");  
         Date date = new Date();  
         return formatter.format(date);
     }
     
-    //Random
+    //Random number generator
     public static String randomKey() throws IOException{
     	Random rand = new Random();
     	int randomKey = rand.nextInt(10000-1000) + 1000;
     	return "" + randomKey;
     }
     
-    //Student Comment
-    public static boolean inputComment(String Comment, String stuID)throws IOException{
-    	Sheets service = getSheetsService();
-    	final String range = "'"+getSheetName()+"'!C2:C26";
-        ValueRange response = service.spreadsheets().values().get(spreadsheetId, range).execute();
-        List<List<Object>> element = response.getValues();
-        int cellRow = 0;
-        for (List row : element) {
-        	cellRow++;
-        	if(stuID.equals(row.get(0))){
-        		String addRange = "'"+getSheetName()+"'!F"+Integer.toString(cellRow+1) +":P"+Integer.toString(cellRow+1);
-        		System.out.println("Your ID is in row: " +(cellRow) + " col: " + (getCol()+5));
-        		if(!checkCommentcell(addRange)) {
-        			printInfo(cellRow,getCol()-1,Comment);
-        			return true;
-        		}
-        		break;
-        	}			
-        } 
-        return false;
-    }
-
-    //checks if comment cell is empty
-    public static boolean checkCommentcell(String range) throws IOException {
-    	Sheets service = getSheetsService();
-        ValueRange response = service.spreadsheets().values().get(spreadsheetId, range).execute();
-        List<List<Object>> element = response.getValues();    
-        if(element == null || element.isEmpty()) {
-        	System.out.println("The whole row is empty");
-        }else {
-        	for (List row : element) {
-        		System.out.println(row.get(0));
-        		if(row.size() == getCol()) {
-        			return true;
-        		}
-        	}
-        }
-        return false;
-    }
-       
-    
-    //check student ID exists
-    public static boolean checkStuID(String ID)throws IOException{
-    	Sheets service = getSheetsService();
-    	final String range = "'"+getSheetName()+"'!C2:C26";
-        ValueRange response = service.spreadsheets().values().get(spreadsheetId, range).execute();
-        List<List<Object>> element = response.getValues();
-        if(element == null || element.isEmpty())
-            System.out.println("Flag CHECK ID.");
-        else{
-        	for (List row : element)
-        		if (ID.equals(row.get(0)))
-        			return true;
-        }
-        return false;
-    }
-    
-    
-    //check if key matches student input
-    public static boolean checkKey(String Key)throws IOException{
-    	Sheets service = getSheetsService();
-    	final String range = "'"+getSheetName()+"'!F32:P32";
-        ValueRange response = service.spreadsheets().values().get(spreadsheetId, range).execute();
-        List<List<Object>> element = response.getValues();
-        System.out.println(getCol());
-        if(element == null || element.isEmpty())
-            System.out.println("Flag CHECK KEY.");
-        else{
-        	for (List row : element)
-        		if (Key.equals(row.get(getCol()-1)))
-        			return true;
-        }
-        return false;
-    }
-    
-    
-    //get the column number of date
-    public static int getCol() throws IOException{
-    	Sheets service = getSheetsService();
-    	final String range = "'"+getSheetName()+"'!F1:P1";
-        ValueRange response = service.spreadsheets().values().get(spreadsheetId, range).execute();
-        List<List<Object>> element = response.getValues();
-        if(element == null)
-        	return 0;
-        else
-        	for(List row : element)
-        		return row.size();     
-        return 0;
-    }
-    
-    
-    //enter key and date to the sheet
-    public static void inputKeyDate(String randKey)throws IOException, NullPointerException{
-    	Sheets service = getSheetsService();
-    	final String range = "'"+getSheetName()+"'!F:P";
-        ValueRange response = service.spreadsheets().values().get(spreadsheetId, range).execute();
-        List<List<Object>> element = response.getValues();
-        if(element == null) {
-        	printInfo(31, 0,randKey);
-        	printInfo(0, 0,getDate());
-        }
-        else { 
-        	for (List row : element)
-        	{
-        		printInfo(31, row.size(),randKey); 
-        		printInfo(0, row.size(),getDate());
-        		break;
-        	}
-        }
-    }
-     
-    
-    //prints data to the sheet (comment date key)
-    public static void printInfo(int row, int col, String info)  throws IOException{
-    	Sheets service = getSheetsService();
-    	List<Request> requests = new ArrayList<>(); 
-    	List<CellData> values = new ArrayList<>();
- 		values.add(new CellData().setUserEnteredValue(new ExtendedValue().setStringValue((info))));
-    	requests.add(new Request()
-    		.setUpdateCells(new UpdateCellsRequest()
-            .setStart(new GridCoordinate().setSheetId(Integer.parseInt(getSheetID())).setRowIndex(row).setColumnIndex(col+5))
-            .setRows(Arrays.asList(new RowData().setValues(values)))
-            .setFields("userEnteredValue,userEnteredFormat.backgroundColor")));     
-    	BatchUpdateSpreadsheetRequest batchUpdateRequest = new BatchUpdateSpreadsheetRequest().setRequests(requests);
-    	service.spreadsheets().batchUpdate(spreadsheetId, batchUpdateRequest).execute();
-    }
-    
-    
-    //prints data to the SHA tab (sheetName sheetID)
-    public static void printSHA(int id, int row, int col, String info)  throws IOException{
-    	Sheets service = getSheetsService();
-    	List<Request> requests = new ArrayList<>(); 
-    	List<CellData> values = new ArrayList<>();
- 		values.add(new CellData().setUserEnteredValue(new ExtendedValue().setStringValue((info))));
-    	requests.add(new Request()
-    		.setUpdateCells(new UpdateCellsRequest()
-            .setStart(new GridCoordinate().setSheetId(id).setRowIndex(row).setColumnIndex(col))
-            .setRows(Arrays.asList(new RowData().setValues(values)))
-            .setFields("userEnteredValue,userEnteredFormat.backgroundColor")));     
-    	BatchUpdateSpreadsheetRequest batchUpdateRequest = new BatchUpdateSpreadsheetRequest().setRequests(requests);
-    	service.spreadsheets().batchUpdate(spreadsheetId, batchUpdateRequest).execute();
-    }  
-
-    
-    //get sheedID and sheetName from teacher (course.jsp)
-    public static void setSheetID(String sheetName,int sheetID) throws IOException {
-    	printSHA(681712685,4,1,Integer.toString(sheetID));
-    	printSHA(681712685,5,1,sheetName);
-    }
-    
-    
-    //get sheetID from the SHA tab
-    public static String getSheetID() throws IOException{
-    	Sheets service = getSheetsService();
-    	final String range = "'SHA'!B5";
-    	String temp = "";
-        ValueRange response = service.spreadsheets().values().get(spreadsheetId, range).execute();
-        List<List<Object>> element = response.getValues();
-        if(element == null) {
-            System.out.println("Empty Cell");
-        }else{
-        	for (List row : element) {
-        		//System.out.println(row.get(0));
-        		temp = (String) row.get(0);
-        	}
-        	return temp;
-        }
-    	return null;	
-    }
-    
-    
-    //gets sheetName from SHA tab
-    public static String getSheetName() throws IOException{
-    	Sheets service = getSheetsService();
-    	final String range = "'SHA'!B6";
-    	String temp = "";
-        ValueRange response = service.spreadsheets().values().get(spreadsheetId, range).execute();
-        List<List<Object>> element = response.getValues();
-        if(element == null) {
-            System.out.println("Empty Cell");
-        }else{
-        	for (List row : element) {
-        		//System.out.println(row.get(0));
-        		temp = (String) row.get(0);
-        	}
-        	return temp;
-        }
-    	return range;
-    }
-    
-    //MQL=========================================================================
-
     /*
      *returns a time x minutes in the future (HH:mm:ss)
      */
@@ -299,13 +107,14 @@ public class SheetsQuickstart {
     	//targeted range for date and key
     	final String range = "'" + sheetName + "'!F:P";
         ValueRange response = service.spreadsheets().values().get(spreadsheetId, range).execute();
-        //2d list
+        //puts in a 2d list
         List<List<Object>> element = response.getValues();
         
         String time = "";
         String key = "";
-        String[]arr = new String[2];
+        String[]arr = new String[2]; //array size 2
         int col = 5;
+        
         //if no data is found in the element from the range
         if (element == null) {
         	//make a new key and update today's date and time limit
@@ -344,7 +153,7 @@ public class SheetsQuickstart {
         				time = (String)element.get(32).get(i-1);
         				System.out.println("It's the same day");
         			}
-        			catch(Exception e){
+        			catch(Exception e){ //when key and timer is missing
         				System.out.println("key is missing, making new key and timer");
         				key = randomKey();
         				time = timeLimit(15);
@@ -355,7 +164,7 @@ public class SheetsQuickstart {
     	        		updateSheet(r, service);
         			}
         		}
-        		//different date found
+        		//when a different date found
         		else {
         			//set today's date, time limit, and key in the next slot
         			key = randomKey();
@@ -628,15 +437,9 @@ public class SheetsQuickstart {
         }
         return hexString.toString();
     }
-       
-  //MQL=========================================================================
-    
     
     public static void main(String[] args) throws IOException {
-    	//System.out.println(getTkey("CSC131",0)[1]);
-        String[]arr = checkIn("CSC131",0,"5144","218784359","hello");
-        System.out.println(arr[0]+'\n'+arr[1]+'\n'+arr[2]);
-        System.out.println("end");
+    	
     }
 }
 
