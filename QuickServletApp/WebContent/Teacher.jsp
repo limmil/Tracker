@@ -19,7 +19,7 @@ body {
 		  <form action="QuickServlet" method="post">
 		  User Name: <input type="text" size="10" name="userTeacher" id="x"/>
 		  &nbsp;&nbsp;
-		  Password <input type="text" size="10" name="passTeacher"/>
+		  Password <input type="password" size="10" name="passTeacher"/>
 		  &nbsp;&nbsp;
 		  <br/><br/>
 		  <button type="submit" value="TeacherLogin" name="FormName">Submit</button>
