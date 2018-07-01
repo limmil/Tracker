@@ -16,8 +16,8 @@ body {
 <center>
 <font color = "white">Attendance Logged for Student ID# </font>
 
-<font color = "red"> <%= request.getAttribute("stuID") %></font>
-on 
+<font color = "red"> <%= request.getAttribute("stuID") %> on</font>
+
 <font color="red">
 	<%
          Date date = new Date();
