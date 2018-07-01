@@ -1,7 +1,6 @@
 package net.codejava.servlet;
  
 import java.io.IOException;
-import java.util.Random;
 import java.io.PrintWriter;
 import SheetPackageTest.SheetsQuickstart;
 
@@ -13,11 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.google.api.services.sheets.v4.Sheets;
-
-import java.time.format.DateTimeFormatter;  
-import java.time.LocalDateTime;    
-
 
 public class QuickServlet extends HttpServlet {
     /**
@@ -25,7 +19,7 @@ public class QuickServlet extends HttpServlet {
      * by the client
      */
 
-	String preCourse = "";
+	private String preCourse = "";
 
     public void init(ServletConfig config) {
         System.out.println("Servlet is being initialized");
@@ -96,8 +90,13 @@ public class QuickServlet extends HttpServlet {
             	    }
     	    	}
     	    	else {
-    	    		rd = request.getRequestDispatcher("AttendanceError.html");
-    	    		rd.forward(request, response);
+    	    		if(paramID.equals("")||paramKey.equals("")||paramKey.equals("")) {
+    	    			rd = request.getRequestDispatcher("Invalid.html");
+                        rd.forward(request, response);
+    	    		}else {
+    	    			rd = request.getRequestDispatcher("AttendanceError.html");
+        	    		rd.forward(request, response);
+    	    		}
     	    	}
     	    }
     	
