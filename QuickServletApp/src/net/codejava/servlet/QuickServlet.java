@@ -18,7 +18,8 @@ public class QuickServlet extends HttpServlet {
      * this life-cycle method is invoked when this servlet is first accessed
      * by the client
      */
-
+    
+	//tracks the last course the teacher picked
 	private String preCourse = "";
 
     public void init(ServletConfig config) {
@@ -48,21 +49,22 @@ public class QuickServlet extends HttpServlet {
     	PrintWriter writer = response.getWriter();
     	String formName = request.getParameter("FormName");
     	RequestDispatcher rd;
- 
+        
+    	//switch for formName from .jsp
     	if (formName.equals("StudentEntry")) {	
     		HttpSession session = request.getSession();
     		String paramID = request.getParameter("Student ID");
     	    String paramKey = request.getParameter("Key");
     	    String paramComment = request.getParameter("Comment");
     	    String[]arr = null;
-    	    
+            //course info can be found from action
     	    String action = request.getParameter("action");
     	    String[] classId = action.split(",");
     	    String course = classId[0];
     	    int sheetId = Integer.parseInt(classId[1]);
-    	    if(session.getAttribute("student") == null) {
+    	    if(session.getAttribute("student") == null) { // student first time checking in
     	    	arr = SheetsQuickstart.checkIn(course ,sheetId ,paramKey ,paramID ,paramComment);
-    	    	if (arr[0].equals("t")) {
+    	    	if (arr[0].equals("t")) { // student input is valid
                     session.setAttribute("student", paramID);
                     request.setAttribute("stuID", paramID);
                     request.setAttribute("key", paramKey);
@@ -74,8 +76,9 @@ public class QuickServlet extends HttpServlet {
                     rd.forward(request, response);
         	    }
     	    }
-    	    else {
-    	    	if(session.getAttribute("student").equals(paramID)) {
+    	    else { // not first time checking in
+    	    	if(session.getAttribute("student").equals(paramID)) { // if student is entering the same SID
+    	    		// will allow for check-in attempt
     	    		arr = SheetsQuickstart.checkIn(course ,sheetId ,paramKey ,paramID ,paramComment);
         	    	if (arr[0].equals("t")) {
         	    		//session.setAttribute("student", paramID);
@@ -90,30 +93,35 @@ public class QuickServlet extends HttpServlet {
             	    }
     	    	}
     	    	else {
-    	    		if(paramID.equals("")||paramKey.equals("")||paramKey.equals("")) {
+    	    		if(paramID.equals("") || paramKey.equals("")) { // one param Key or ID is empty
     	    			rd = request.getRequestDispatcher("Invalid.html");
                         rd.forward(request, response);
-    	    		}else {
+    	    		}
+    	    		else {
     	    			rd = request.getRequestDispatcher("AttendanceError.html");
         	    		rd.forward(request, response);
     	    		}
     	    	}
     	    }
     	
-    	}else if(formName.equals("TeacherLogin")){//Teacher.jsp 
+    	}
+    	else if(formName.equals("TeacherLogin")){ // Teacher.jsp switch for formName
     	    String teacher = request.getParameter("userTeacher");
     	    String password = request.getParameter("passTeacher");
             
-    	    if(SheetsQuickstart.checkLogin(teacher, password)) { 	
+    	    if(SheetsQuickstart.checkLogin(teacher, password)) { // login successfully
                 HttpSession session = request.getSession();
                 session.setAttribute("teacher", teacher);
     	    	rd = request.getRequestDispatcher("Course.jsp");
                 rd.forward(request, response); 
-            }else {
+            }
+    	    else {
             	rd = request.getRequestDispatcher("Invalid.html");
                 rd.forward(request, response);
 	    	} 
-    	}else if(formName.equals("CourseSelect")) { //Course.jsp   
+    	}
+    	else if(formName.equals("CourseSelect")) { //Course.jsp switch for formName
+    		// list parameter
     		String course = request.getParameter("myList");    	    	
 
     		if(course.equals("CSC20")) {
@@ -153,39 +161,45 @@ public class QuickServlet extends HttpServlet {
 	    	    request.getRequestDispatcher("RandKey.jsp").forward(request, response);
 	    	    preCourse = "CSC135";
     		} 
-    	}else if(formName.equals("KeyReset")) {
+    	}
+    	else if(formName.equals("KeyReset")) { //RandKey.jsp switch for formName
     		if(preCourse.equals("CSC20")) {
     			String[]arr = SheetsQuickstart.resetTkey("CSC20",1996570317);
     			request.setAttribute("randomKey", arr[1] );
     			request.setAttribute("timeLimit", "Key is valid till "+arr[0]);
 	    	    request.getRequestDispatcher("RandKey.jsp").forward(request, response);
 	    	    preCourse = "CSC20";
-    		}else if(preCourse.equals("CSC130")) {
+    		}
+    		else if(preCourse.equals("CSC130")) {
     			String[]arr = SheetsQuickstart.resetTkey("CSC130",1472870202);
     			request.setAttribute("randomKey", arr[1] );
     			request.setAttribute("timeLimit", "Key is valid till "+arr[0]);
 	    	    request.getRequestDispatcher("RandKey.jsp").forward(request, response);
 	    	    preCourse = "CSC130";
-    		}else if(preCourse.equals("CSC131")) {
+    		}
+    		else if(preCourse.equals("CSC131")) {
     			String[]arr = SheetsQuickstart.resetTkey("CSC131",0);
     			request.setAttribute("randomKey", arr[1] );
     			request.setAttribute("timeLimit", "Key is valid till "+arr[0]);
 	    	    request.getRequestDispatcher("RandKey.jsp").forward(request, response);
 	    	    preCourse = "CSC131";
-    		}else if(preCourse.equals("CSC133")) {
+    		}
+    		else if(preCourse.equals("CSC133")) {
     			String[]arr = SheetsQuickstart.resetTkey("CSC133",756897706);
     			request.setAttribute("randomKey", arr[1] );
     			request.setAttribute("timeLimit", "Key is valid till "+arr[0]);
 	    	    request.getRequestDispatcher("RandKey.jsp").forward(request, response);
 	    	    preCourse = "CSC133";
-    		}else if(preCourse.equals("CSC135")) {
+    		}
+    		else if(preCourse.equals("CSC135")) {
     			String[]arr = SheetsQuickstart.resetTkey("CSC135",543682871);
     			request.setAttribute("randomKey", arr[1] );
     			request.setAttribute("timeLimit", "Key is valid till "+arr[0]);
 	    	    request.getRequestDispatcher("RandKey.jsp").forward(request, response);
 	    	    preCourse = "CSC135";
     		}
-    	}else {
+    	}
+    	else {
     		writer.println("Key has not been created");
         	writer.flush();
     	}

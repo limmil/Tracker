@@ -366,6 +366,7 @@ public class SheetsQuickstart {
         		.setRows(Arrays.asList(new RowData().setValues(values)))
         		.setFields("userEnteredValue,userEnteredFormat.backgroundColor")));
     }
+    
     /*
      * updates multiple values in the google sheet with one API call (part2)
      */
@@ -374,6 +375,7 @@ public class SheetsQuickstart {
     	BatchUpdateSpreadsheetRequest batchUpdateRequest = new BatchUpdateSpreadsheetRequest().setRequests(request);
      	service.spreadsheets().batchUpdate(spreadsheetId, batchUpdateRequest).execute();
     }
+    
     /*
      * Checks the login for the teacher
      */
@@ -403,9 +405,10 @@ public class SheetsQuickstart {
     	}
     	
     }
+    
     /*
      * Sets up username and password on the SHA page
-     * */
+     */
     public static void userSetup(String uname, String pword)throws IOException {
     	Sheets service = getSheetsService();
         List<Request> req = new ArrayList<>();
@@ -439,7 +442,7 @@ public class SheetsQuickstart {
     }
     
     public static void main(String[] args) throws IOException {
-    	
+    	userSetup("DNguyen","123!@#");
     }
 }
 
