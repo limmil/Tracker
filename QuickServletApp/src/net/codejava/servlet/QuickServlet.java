@@ -24,7 +24,7 @@ public class QuickServlet extends HttpServlet {
 
     public void init(ServletConfig config) {
         System.out.println("Servlet is being initialized");
-        
+        preCourse = "CSC131";
         
     }
  
