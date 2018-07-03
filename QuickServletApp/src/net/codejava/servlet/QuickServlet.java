@@ -50,7 +50,13 @@ public class QuickServlet extends HttpServlet {
     	String formName = request.getParameter("FormName");
     	RequestDispatcher rd;
         
-    	//switch for formName from .jsp
+    	/*
+    	 * Get student data. Code is performed after generating key from the professor. Using the if condition
+    	 * we get the form name "StudentEntry" to verify the jsp page has been activated. Using the request function
+    	 * we get the parameters in the jsp text box so the student ID and student key and use those data to validate
+    	 * in the back end. We also check if the comment box is empty. 
+    	 * 
+    	 */
     	if (formName.equals("StudentEntry")) {	
     		HttpSession session = request.getSession();
     		String paramID = request.getParameter("Student ID");
@@ -105,6 +111,9 @@ public class QuickServlet extends HttpServlet {
     	    }
     	
     	}
+    	/*
+    	 * Using request we get the teacher username and password and validate it in the back end. 
+    	 */
     	else if(formName.equals("TeacherLogin")){ // Teacher.jsp switch for formName
     	    String teacher = request.getParameter("userTeacher");
     	    String password = request.getParameter("passTeacher");
@@ -120,6 +129,12 @@ public class QuickServlet extends HttpServlet {
                 rd.forward(request, response);
 	    	} 
     	}
+    	/*
+    	 * This is the course select page where the professor selects the section he/she would like to 
+    	 * get the attendance from. Upon selection the sheetID is passed for the tabs in the google sheet
+    	 * and the name of the google sheet tabs which becomes the range. We also forward the page to the
+    	 * display page called RandKey where the timer, key, and manual entry button are located. 
+    	 */
     	else if(formName.equals("CourseSelect")) { //Course.jsp switch for formName
     		// list parameter
     		String course = request.getParameter("myList");    	    	
@@ -200,7 +215,8 @@ public class QuickServlet extends HttpServlet {
     		}
     	}
     	else {
-    		writer.println("Key has not been created");
+    		writer.println("Key has not been created"); // this is for extra safety just in case there
+    											//was something wrong with the web page for student or professor
         	writer.flush();
     	}
     }
