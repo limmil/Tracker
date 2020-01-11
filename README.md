@@ -1,7 +1,3 @@
-Originated from https://github.com/p-chandra/Java
-
-**Author: P. Chandra**
-
 Must have
 Java IDE - Eclipse EE          - https://www.eclipse.org/downloads/packages/eclipse-ide-java-ee-developers/keplersr2
 Java 1.8 - JDK(Must be JDK 8)  - http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
